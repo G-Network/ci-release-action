@@ -1,0 +1,23 @@
+{
+  "name": "ci-release-action",
+  "version": "1.0.0",
+  "description": "Create a release based on package version",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "rm -rf dist && ncc build src/index.js -m && git add dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:G-Network/ci-release-action.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@actions/core": "^1.2.2",
+    "@actions/exec": "^1.0.3",
+    "@actions/github": "^2.1.0"
+  },
+  "devDependencies": {
+    "@zeit/ncc": "^0.21.0"
+  }
+}
