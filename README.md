@@ -16,7 +16,7 @@ on:
     types: [closed]
 
 jobs:
-  relase:
+  release:
     runs-on: ubuntu-latest
     if: github.event.pull_request.merged == true # check if pull request was merged
     steps:
