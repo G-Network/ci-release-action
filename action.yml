@@ -3,7 +3,7 @@ description: 'Create a release based on package version'
 author: 'G-Network'
 inputs:
   deploy:
-    description: 'Number of Octocats'
+    description: 'Deployment type (package/service)'
     required: false
 outputs:
   version:
