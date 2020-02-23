@@ -5,6 +5,9 @@ inputs:
   deploy:
     description: 'Deployment type (package/service)'
     required: false
+  skip_version_check:
+    description: 'Skip check of package version (yes/no)'
+    required: false
 outputs:
   version:
     description: 'New release version or false if no release'

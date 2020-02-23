@@ -3,6 +3,7 @@ const path = require("path");
 const core = require("@actions/core");
 const exec = require("@actions/exec");
 const { GitHub, context } = require("@actions/github");
+const octokit = new GitHub(process.env.GITHUB_TOKEN);
 
 async function run(cmd, ...params) {
   const options = {
@@ -11,15 +12,12 @@ async function run(cmd, ...params) {
   return exec.exec(cmd, params, options);
 }
 
-async function createDeployment() {
-  const deployType = core.getInput("deploy", { required: false });
-  if (!deployType) {
-    return;
-  } else if (deployType === "package") {
+async function createDeployment(type) {
+  if (type === "package") {
     await run("npm", "publish");
-  } else if (deployType === "serverless") {
-    await run("npm", "install", "serverless");
-    await run("npx", "serverless", "deploy");
+  } else if (type === "service") {
+    await run("npm", "install", "serverless", "-g");
+    await run("serverless", "deploy");
   } else {
     throw new Error("Invalid deployment type");
   }
@@ -34,7 +32,6 @@ function getCurrentVerison() {
 }
 
 function getCurrentRelease() {
-  octokit = new GitHub(process.env.GITHUB_TOKEN);
   const { owner, repo } = context.repo;
   return octokit.repos
     .getLatestRelease({
@@ -42,8 +39,7 @@ function getCurrentRelease() {
       repo
     })
     .then(res => {
-      const version = res.data.tag_name.replace(/[a-zA-Z\s]+/, "");
-      return version;
+      return res.data.tag_name.replace(/[a-zA-Z\s]+/, "");
     })
     .catch(() => {
       return "none";
@@ -51,7 +47,6 @@ function getCurrentRelease() {
 }
 
 function createNewRelease(version) {
-  octokit = new GitHub(process.env.GITHUB_TOKEN);
   const { owner, repo } = context.repo;
   return octokit.repos.createRelease({
     owner,
@@ -63,6 +58,8 @@ function createNewRelease(version) {
 
 (async () => {
   core.exportVariable("NODE_AUTH_TOKEN", process.env.GITHUB_TOKEN);
+  const skipVersionCheck = core.getInput("skip_version_check", { required: false });
+  const deployType = core.getInput("deploy", { required: false });
   try {
     const currentRelease = await getCurrentRelease();
     const currentVersion = await getCurrentVerison();
@@ -73,10 +70,13 @@ function createNewRelease(version) {
     if (currentRelease !== currentVersion) {
       console.log("Creating new release: ", currentVersion);
       await createNewRelease(currentVersion);
-      await createDeployment();
+      await createDeployment(deployType);
       core.setOutput("version", currentVersion);
+    } else if (skipVersionCheck && deployType === 'service') {
+      console.log("Current release: ", currentRelease);
+      await createDeployment(deployType);
     } else {
-      core.setOutput("version", false);
+      core.setOutput("version", 'false');
     }
     core.exportVariable("NODE_AUTH_TOKEN", "XXXXX-XXXXX-XXXXX-XXXXX");
     core.exportVariable("GITHUB_TOKEN", "XXXXX-XXXXX-XXXXX-XXXXX");
