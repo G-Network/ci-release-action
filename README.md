@@ -1,5 +1,6 @@
 # CI Release Action
-Used to automate builds on gihub action pipeline
+Used to automate builds on gihub action pipeline.
+
 After each pull request is merged into selected branch, if the package.json version value changes it creates a new release/tag.
  - If param `deploy` is omitted or false, no further actions are taken
  - If param `deploy` is set to `'package'` after creating a new release also a npm package wil be published to the given registry
