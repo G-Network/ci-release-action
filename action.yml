@@ -2,11 +2,20 @@ name: 'Create release'
 description: 'Create a release based on package version'
 author: 'G-Network'
 inputs:
-  deploy:
-    description: 'Deployment type (package/service)'
+  relese:
+    description: 'Create release (true/false)'
     required: false
-  skip_version_check:
-    description: 'Skip check of package version (yes/no)'
+  deploy:
+    description: 'Run deployment(true/false)'
+    required: false
+  type:
+    description: 'Deployment type(package/service)'
+    required: false
+  awsKey:
+    description: 'AWS Key'
+    required: false
+  awsSecret:
+    description: 'AWS Secret'
     required: false
 outputs:
   version:

@@ -27,7 +27,9 @@ jobs:
         registry-url: 'https://npm.pkg.github.com'
     - uses: g-network/npm-release-action@v1
       with:
-        deploy: package # publish npm package
+        release: true
+        deploy: true
+        type: package # publish npm package
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
