@@ -55,6 +55,7 @@ function getCurrentRelease() {
  */
 async function createRelease() {
   const release = core.getInput('release', { required: false });
+  const publish = core.getInput('publish', { required: false });
   const currentRelease = await getCurrentRelease();
   const currentVersion = await getCurrentVerison();
   if (release && currentRelease !== currentVersion) {
@@ -66,6 +67,11 @@ async function createRelease() {
       name: `Release v${currentVersion}`,
     });
     console.log(`New release created: ${currentVersion}`);
+
+    // we can pablish new package only for new release
+    if (publish) {
+      await run('npm', 'publish');
+    }
   }
 }
 
@@ -74,26 +80,15 @@ async function createRelease() {
  */
 async function runDeployment() {
   const deploy = core.getInput('deploy', { required: false });
-  const type = core.getInput('type', { required: false });
 
-  if (deploy && type === 'package') {
-    await run('npm', 'publish');
-
-    return;
-  }
-
-  if (deploy && type === 'service') {
-    const key = core.getInput('awsKey', { required: true });
-    const secret = core.getInput('awsSecret', { required: true });
+  if (deploy) {
+    const key = process.env.AWS_ACCESS_KEY_ID;
+    const secret = process.AWS_SECRET_ACCESS_KEY;
 
     await run('npm', 'install', 'serverless', '-g');
     await run('sls', 'configure', '--provider aws', `--key ${key}`, `--secre ${secret}`);
     await run('sls', 'deploy');
-
-    return;
   }
-
-  return;
 }
 
 /**
@@ -111,5 +106,7 @@ async function runDeployment() {
     core.setFailed(error.message);
   } finally {
     core.exportVariable('NODE_AUTH_TOKEN', 'XXXXX-XXXXX-XXXXX-XXXXX');
+    core.exportVariable('AWS_ACCESS_KEY_ID', 'XXXXX-XXXXX-XXXXX-XXXXX');
+    core.exportVariable('AWS_SECRET_ACCESS_KEY', 'XXXXX-XXXXX-XXXXX-XXXXX');
   }
 })();

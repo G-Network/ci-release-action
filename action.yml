@@ -5,17 +5,11 @@ inputs:
   relese:
     description: 'Create release (true/false)'
     required: false
+  publish:
+    description: 'Publish the package(true/false)'
+    required: false
   deploy:
     description: 'Run deployment(true/false)'
-    required: false
-  type:
-    description: 'Deployment type(package/service)'
-    required: false
-  awsKey:
-    description: 'AWS Key'
-    required: false
-  awsSecret:
-    description: 'AWS Secret'
     required: false
 outputs:
   version:

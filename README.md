@@ -29,7 +29,9 @@ jobs:
       with:
         release: true
         deploy: true
-        type: package # publish npm package
+        publish: true # publish npm package
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 ```
