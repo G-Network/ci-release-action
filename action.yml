@@ -2,7 +2,7 @@ name: 'Create release'
 description: 'Create a release based on package version'
 author: 'G-Network'
 inputs:
-  relese:
+  release:
     description: 'Create release (true/false)'
     required: false
   publish:
