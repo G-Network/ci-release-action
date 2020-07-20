@@ -83,10 +83,10 @@ async function runDeployment() {
 
   if (deploy) {
     const key = process.env.AWS_ACCESS_KEY_ID;
-    const secret = process.AWS_SECRET_ACCESS_KEY;
+    const secret = process.env.AWS_SECRET_ACCESS_KEY;
 
     await run('npm', 'install', 'serverless', '-g');
-    await run('sls', 'configure', '--provider aws', `--key ${key}`, `--secre ${secret}`);
+    await run('sls', 'config', '--provider aws', `--key ${key}`, `--secret ${secret}`);
     await run('sls', 'deploy');
   }
 }
