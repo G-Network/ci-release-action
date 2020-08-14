@@ -21,7 +21,9 @@ async function run(cmd, ...params) {
  * Get current working branch
  */
 function getCurrentBranch() {
-  return process.env.GITHUB_REF.split('/').pop();
+  console.log('Original branch name: ', context.payload.pull_request.head.ref)
+  return context.payload.pull_request.head.ref
+  //return process.env.GITHUB_REF.split('/').pop();
 }
 
 /**
